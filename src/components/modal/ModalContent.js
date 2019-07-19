@@ -21,19 +21,13 @@ const errorSwal = title =>
     heightAuto: false
   });
 
+const apiUrl =
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_SERVER_API
+    : process.env.REACT_APP_LOCAL_SERVER_API;
+
 export const ModalContent = ({ toggleOpen, role = "dialog", onKeyDown }) => {
   const [email, setEmail] = useState("");
-  console.log(
-    "process.env.REACT_APP_SERVER_API",
-    process.env.REACT_APP_SERVER_API
-  );
-
-  const myUrl =
-    process.env.NODE_ENV !== "production"
-      ? process.env.REACT_APP_SERVER_API
-      : "http://localhost:6969";
-
-  console.log("url", myUrl);
 
   const handleEmailSubmit = async event => {
     event.preventDefault();
@@ -44,7 +38,7 @@ export const ModalContent = ({ toggleOpen, role = "dialog", onKeyDown }) => {
 
     const res = await axios({
       method: "post",
-      url: myUrl + "/email_received",
+      url: `${apiUrl}/email_received`,
       data: { email }
     });
 
