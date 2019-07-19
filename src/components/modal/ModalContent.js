@@ -4,12 +4,11 @@ import axios from "axios";
 
 export const ModalContent = ({ toggleOpen, role = "dialog", onKeyDown }) => {
   const [email, setEmail] = useState("test@gmail.com");
-
   const handleEmailSubmit = event => {
     event.preventDefault();
-
+    console.log("email", email);
     return axios
-      .post("http://localhost:6969/email_received", {
+      .post(`${process.env.REACT_APP_SERVER_API}/email_received`, {
         email
       })
       .then(res => {
