@@ -13,9 +13,9 @@ const successSwal = () =>
     showConfirmButton: false
   });
 
-const errorSwal = () =>
+const errorSwal = title =>
   swal.fire({
-    title: "Please check your email",
+    title,
     position: "center",
     type: "error",
     heightAuto: false
@@ -29,16 +29,23 @@ export const ModalContent = ({ toggleOpen, role = "dialog", onKeyDown }) => {
 
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    if (!isValidEmail) return errorSwal();
+    if (!isValidEmail) return errorSwal("Email not valid");
+
+    const url =
+      process.env.NODE_ENV === "production"
+        ? process.env.REACT_APP_SERVER_API
+        : "http://localhost:6969";
 
     const res = await axios({
       method: "post",
-      url: "https://cwb-landing-page-api.herokuapp.com/email_received",
+      url: `${url}/email_received`,
       data: { email }
     });
 
     if (res.status === 200 && res.data === "You will be notified!") {
       return successSwal();
+    } else {
+      return errorSwal(res.data);
     }
   };
 

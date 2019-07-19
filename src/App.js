@@ -4,6 +4,7 @@ import "./App.scss";
 
 class App extends Component {
   render() {
+    console.log(process.env.NODE_ENV);
     return (
       <div className="App">
         <div className="shape" />
