@@ -8,7 +8,7 @@ export const ModalContent = ({ toggleOpen, role = "dialog", onKeyDown }) => {
     event.preventDefault();
     console.log("email", email);
     return axios
-      .post(`${process.env.REACT_APP_SERVER_API}/email_received`, {
+      .post(`https://cwb-landing-page-api.herokuapp.com/email_received`, {
         email
       })
       .then(res => {
