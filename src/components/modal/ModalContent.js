@@ -12,7 +12,10 @@ export const ModalContent = ({ toggleOpen, role = "dialog", onKeyDown }) => {
       method: "post",
       url: "https://cwb-landing-page-api.herokuapp.com/email_received",
       data: { email },
-      withCredentials: true
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json"
+      }
     }).then(res => console.log("RES", res));
   };
 
