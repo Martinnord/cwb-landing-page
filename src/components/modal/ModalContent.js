@@ -1,18 +1,45 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
+import swal from "sweetalert2";
+import { PrimaryButton } from "../PrimaryButton";
+
+const successSwal = () =>
+  swal.fire({
+    title: "We will notify you!",
+    position: "center",
+    type: "success",
+    timer: 1400,
+    showConfirmButton: false
+  });
+
+const errorSwal = () =>
+  swal.fire({
+    title: "Please check your email",
+    position: "center",
+    type: "error",
+    heightAuto: false
+  });
 
 export const ModalContent = ({ toggleOpen, role = "dialog", onKeyDown }) => {
-  const [email, setEmail] = useState("test@gmail.com");
-  const handleEmailSubmit = event => {
-    event.preventDefault();
-    console.log("email", email);
+  const [email, setEmail] = useState("");
 
-    return axios({
+  const handleEmailSubmit = async event => {
+    event.preventDefault();
+
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (!isValidEmail) return errorSwal();
+
+    const res = await axios({
       method: "post",
       url: "https://cwb-landing-page-api.herokuapp.com/email_received",
       data: { email }
-    }).then(res => console.log("RES", res));
+    });
+
+    if (res.status === 200 && res.data === "You will be notified!") {
+      return successSwal();
+    }
   };
 
   return ReactDOM.createPortal(
@@ -35,13 +62,18 @@ export const ModalContent = ({ toggleOpen, role = "dialog", onKeyDown }) => {
           </svg>
         </button>
         <div className="c-modal__body">
-          <label>Enter your email below</label>
-          <input
-            type="email"
-            placeholder="Email"
-            onChange={e => setEmail(e.target.value)}
-          />
-          <button onClick={handleEmailSubmit}>Send!</button>
+          <div>
+            <h1>Enter your email below</h1>
+            <form>
+              <input
+                type="email"
+                placeholder="Email"
+                required
+                onChange={e => setEmail(e.target.value)}
+              />
+              <PrimaryButton onClick={handleEmailSubmit}>Send!</PrimaryButton>
+            </form>
+          </div>
         </div>
       </div>
     </aside>,
